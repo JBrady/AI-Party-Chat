@@ -33,7 +33,7 @@ app.post("/turn", async (req, res) => {
     const plan = await director.generatePlayPlan(input);
     assertValidPlayPlan(plan);
 
-    const transcript = executePlayPlan(plan, AGENTS, store.getState(), userPacket.text);
+    const transcript = await executePlayPlan(plan, AGENTS, store.getState(), userPacket.text);
     const room_state = store.applyTurn(plan, transcript);
 
     return res.json({ play_plan: plan, transcript, room_state });
@@ -52,7 +52,7 @@ app.post("/reset", (_req, res) => {
   res.json(state);
 });
 
-const port = process.env.PORT ? Number(process.env.PORT) : 3000;
+const port = process.env.PORT ? Number(process.env.PORT) : 3001;
 app.listen(port, () => {
   console.log(`Voice party chat MVP listening on ${port}`);
 });
