@@ -33,11 +33,14 @@ export function executePlayPlan(
     ? estimateSpeakMs(primaryText ?? "", plan.pacing.pace_wpm)
     : 0;
   const interruptionAt = shouldSplitPrimary
-    ? clamp(Math.round(durationMs * 0.5), 220, 900)
+    ? clamp(Math.round(durationMs * 0.5), 220, 1500)
     : 0;
   const localInterruptions = shouldSplitPrimary
     ? [{ ...plan.interruptions[0], at_ms: interruptionAt }, ...plan.interruptions.slice(1)]
     : plan.interruptions;
+  if (shouldSplitPrimary) {
+    plan.interruptions = localInterruptions;
+  }
   const suffixTime = shouldSplitPrimary ? interruptionAt + 120 : 0;
   const deferredRequests: typeof plan.content_requests = [];
 
